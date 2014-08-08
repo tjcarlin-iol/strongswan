@@ -44,12 +44,13 @@ ENUM_NEXT(diffie_hellman_group_names, MODP_1024_160, ECP_512_BP, ECP_521_BIT,
 	"ECP_512_BP");
 ENUM_NEXT(diffie_hellman_group_names, MODP_NULL, MODP_NULL, ECP_512_BP,
 	"MODP_NULL");
-ENUM_NEXT(diffie_hellman_group_names, NTRU_112_BIT, NTRU_256_BIT, MODP_NULL,
+ENUM_NEXT(diffie_hellman_group_names, NTRU_112_BIT, CURVE_25519, MODP_NULL,
 	"NTRU_112",
 	"NTRU_128",
 	"NTRU_192",
-	"NTRU_256");
-ENUM_NEXT(diffie_hellman_group_names, NH_128_BIT, NH_128_BIT, NTRU_256_BIT,
+	"NTRU_256",
+	"CURVE_25519");
+ENUM_NEXT(diffie_hellman_group_names, NH_128_BIT, NH_128_BIT, CURVE_25519,
 	"NEWHOPE_128");
 ENUM_NEXT(diffie_hellman_group_names, MODP_CUSTOM, MODP_CUSTOM, NH_128_BIT,
 	"MODP_CUSTOM");
@@ -557,6 +558,7 @@ bool diffie_hellman_verify_value(diffie_hellman_group_t group, chunk_t value)
 		case NTRU_192_BIT:
 		case NTRU_256_BIT:
 		case NH_128_BIT:
+		case CURVE_25519:
 			/* verification currently not supported, do in plugin */
 			valid = FALSE;
 			break;
