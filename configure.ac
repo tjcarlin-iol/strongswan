@@ -501,8 +501,19 @@ AC_SEARCH_LIBS(pthread_create, pthread, [PTHREADLIB=$LIBS])
 AC_SUBST(PTHREADLIB)
 
 # uClibc requires explicit -latomic for __atomic_* operations
+# AC_SEARCH_LIBS() does not work when checking built-ins due to conflicting types
 LIBS=""
-AC_SEARCH_LIBS(__atomic_load, atomic, [ATOMICLIB=$LIBS])
+AC_MSG_CHECKING(for library containing __atomic_load_n)
+AC_LINK_IFELSE(
+	[AC_LANG_PROGRAM([[]], [[int x; __atomic_load_n(&x, __ATOMIC_RELAXED);]])],
+	[AC_MSG_RESULT([none required])],
+	[LIBS="-latomic";
+	 AC_LINK_IFELSE(
+		[AC_LANG_PROGRAM([[]], [[int x; __atomic_load_n(&x, __ATOMIC_RELAXED);]])],
+		[AC_MSG_RESULT([-latomic]); ATOMICLIB=$LIBS],
+		[AC_MSG_RESULT([no])])
+	]
+)
 AC_SUBST(ATOMICLIB)
 
 LIBS=$saved_LIBS
